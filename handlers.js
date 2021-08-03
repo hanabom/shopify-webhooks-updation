@@ -8,6 +8,7 @@ const basicProperties = async (shopifyObj) => {
     hanabomObj.name = shopifyObj.title;
     hanabomObj.slug = shopifyObj.id.toString();
     hanabomObj.sku = shopifyObj.handle + Math.floor(Math.random() * 1000000000).toString(); 
+    hanabomObj.status = shopifyObj.status == "active" ? "publish" : "private"
     // hanabomObj.price = shopifyObj.price;
     // hanabomObj.regular_price = shopifyObj.price;
     //hanabomObj.sale_price = "";
@@ -82,7 +83,7 @@ const imageProperty = (shopifyObj) => {
 
 const descProperty = (images) => {
     let output = "";
-
+    
     images.forEach((element) => {
         output += `<img class="size-medium aligncenter" src="${element.src}" alt="" width="300" height="300" /><br />\n`
     });
