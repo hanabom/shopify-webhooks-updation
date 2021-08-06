@@ -3,12 +3,13 @@ const { uploadHanabom, putHanabom } = require("./hanabomAPI");
 const { dbAction, dbEnd } = require("./db");
 
 exports.handler = async (event) => {
+    console.log('event:', event)
     const shopifyObj = JSON.parse(event.body);
     // const vendor = event.headers.x-shopify-shop-domain;
-    // console.log(vendor);
 
     // Initial product setup
     let product = await handlers.basicProperties(shopifyObj);
+    
 
     // Each Complex Properties setup
     product.type = await handlers.typeProperty(shopifyObj);
@@ -19,16 +20,27 @@ exports.handler = async (event) => {
 
     product = await handlers.stockProperties(product, shopifyObj);
 
-    // Upload product to Hanabom
-    const uploadRes = await uploadHanabom(product);
+    console.log('product:', product);
 
-    // // Update Image of uploaded product -- it takes long (20 seconds) 
-    const pImages = await handlers.imageProperty(shopifyObj);
-    const newProduct = await putHanabom(uploadRes.id, {images: pImages});
+    // Find from db
+    const shopifyID = event.id;
+    const sql = `SELECT * FROM products WHERE wixId = "${shopifyID}";`;
 
-    // // Update Description with S3 Image URI
-    const pDesc = await handlers.descProperty(newProduct.images);
-    putHanabom(uploadRes.id, {description: pDesc});
+    dbAction(sql, (results) => {
+        let sqlData = results;
+        console.log("sql data:", sqlData);
+
+        // // Update Image of uploaded product -- it takes long (20 seconds) 
+        // const pImages = await handlers.imageProperty(shopifyObj);
+        // const newProduct = await putHanabom(uploadRes.id, {images: pImages});
+
+        // // Update Description with S3 Image URI
+        // const pDesc = await handlers.descProperty(newProduct.images);
+        // putHanabom(uploadRes.id, {description: pDesc});
+        // putHanabom(sqlData[0].hanaId, objectResult[0]);
+        return sqlData;
+    });
+    dbEnd();
 
     // Response
     const response = {

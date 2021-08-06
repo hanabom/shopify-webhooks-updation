@@ -1,6 +1,7 @@
 //TODO: sale price, unfinished functions, vendors
 
 const { hanabomObj, attColour, attSize } = require("./hanabomObj");
+const { categoryIdFinder } = require("./category");
 const { getHanabom } = require("./hanabomAPI");
 
 // Every function unneeded properties
@@ -57,13 +58,15 @@ const attProperty = (shopifyObj) => {
 
    
     return output;
-}
+};
 
 const categoryProperty = (shopifyObj) => {
-    
-
-    return [];
-}
+    const result = [];
+    const collection = shopifyObj.product_type;
+    const categoryData = categoryIdFinder(collection);
+    categoryData.forEach((category) => result.push({ id: category.id }));
+    return result;
+};
 
 const variProperty = (shopifyObj) => {
     
