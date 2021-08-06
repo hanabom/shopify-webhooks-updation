@@ -25,6 +25,7 @@ exports.handler = async (event) => {
     // Find from db
     const shopifyID = event.id;
     const sql = `SELECT * FROM products WHERE wixId = "${shopifyID}";`;
+    console.log('sql:', sql)
 
     dbAction(sql, (results) => {
         let sqlData = results;
