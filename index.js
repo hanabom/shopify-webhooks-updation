@@ -23,7 +23,7 @@ exports.handler = async (event) => {
     console.log('product:', product);
 
     // Find from db
-    const shopifyID = event.id;
+    const shopifyID = shopifyObj.id;
     const sql = `SELECT * FROM products WHERE wixId = "${shopifyID}";`;
     console.log('sql:', sql)
 
@@ -31,12 +31,17 @@ exports.handler = async (event) => {
         let sqlData = results;
         console.log("sql data:", sqlData);
 
+        
+
         // // Update Image of uploaded product -- it takes long (20 seconds) 
         // const pImages = await handlers.imageProperty(shopifyObj);
         // const newProduct = await putHanabom(uploadRes.id, {images: pImages});
 
         // // Update Description with S3 Image URI
-        // const pDesc = await handlers.descProperty(newProduct.images);
+        const pDesc = await handlers.descProperty(newProduct.images);
+
+        const dataShape = { ...product, description: pDesc}
+        console.log('dataShape:', dataShape)
         // putHanabom(uploadRes.id, {description: pDesc});
         // putHanabom(sqlData[0].hanaId, objectResult[0]);
         return sqlData;
