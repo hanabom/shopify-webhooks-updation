@@ -1,3 +1,4 @@
+/*
 const handlers = require("./handlers");
 const { uploadHanabom, putHanabom } = require("./hanabomAPI");
 const { dbAction, dbEnd } = require("./db");
@@ -42,7 +43,6 @@ exports.handler = async (event) => {
   });
   dbEnd();
 
-  /*
 
   // Find from db
   const shopifyID = shopifyObj.id;
@@ -67,7 +67,54 @@ exports.handler = async (event) => {
     return sqlData;
   });
   dbEnd();
-  */
+  
+
+  // Response
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify("Hello from Lambda!"),
+  };
+  return response;
+};
+
+*/
+
+const handlers = require("./handlers");
+const { uploadHanabom, putHanabom, getHanabom } = require("./hanabomAPI");
+const { dbAction, dbEnd } = require("./db");
+const { variantProperty } = require("./productVariant");
+const helpers = require("./helpers");
+
+exports.handler = async (event) => {
+  console.log("event:", event);
+  // const shopifyObj = event.body;
+  const shopifyObj = JSON.parse(event.body);
+  // const vendor = event.headers.x-shopify-shop-domain;
+
+  // Initial product setup
+  let product = await handlers.basicProperties(shopifyObj);
+
+  // Store on db
+  const hanaID = "19175";
+  const shopifyID = "70354430199655";
+  const prodName = product.name;
+  const sql =
+    'INSERT INTO products (hanaId, wixId, name) VALUES ("' +
+    hanaID +
+    '", "' +
+    shopifyID +
+    '", "' +
+    prodName +
+    '");';
+  console.log("sql:", sql);
+
+  dbAction(sql, (results) => {
+    console.log("inside db action");
+    return results;
+  });
+  dbEnd();
+
+  console.log("after db end");
 
   // Response
   const response = {
