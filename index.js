@@ -23,7 +23,18 @@ exports.handler = async (event) => {
   console.log("product:", product);
 
   // Store on db
-  const sql = `SELECT * FROM products;`;
+  const hanaID = "19175";
+  const shopifyID = "70354430199655";
+  const prodName = product.name;
+  const sql =
+    'INSERT INTO products (hanaId, wixId, name) VALUES ("' +
+    hanaID +
+    '", "' +
+    shopifyID +
+    '", "' +
+    prodName +
+    '");';
+  console.log("sql:", sql);
 
   dbAction(sql, (results) => {
     console.log("inside db action");
