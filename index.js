@@ -5,6 +5,7 @@ const { dbAction, dbEnd } = require("./db");
 exports.handler = async (event) => {
     console.log('event:', event)
     const shopifyObj = JSON.parse(event.body);
+    // TODO: vendor title
     // const vendor = event.headers.x-shopify-shop-domain;
 
     // Initial product setup
