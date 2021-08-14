@@ -9,17 +9,6 @@ const dbConn = mysql.createConnection({
   database: "products",
 });
 
-// dbConn.connect((err) => {
-//   if (err) throw err;
-//   console.log("MySql connected...");
-
-//   return dbConn.query("SELECT * FROM products", function (err, result, fields) {
-//     if (err) throw err;
-//     console.log(result);
-//     return result;
-//   });
-// });
-
 function handleDisconnect() {
   dbConn.connect(function (err) {
     if (err) {

@@ -80,10 +80,8 @@ exports.handler = async (event) => {
 */
 
 const handlers = require("./handlers");
-const { uploadHanabom, putHanabom, getHanabom } = require("./hanabomAPI");
+const { uploadHanabom } = require("./hanabomAPI");
 const { dbAction, dbEnd } = require("./db");
-const { variantProperty } = require("./productVariant");
-const helpers = require("./helpers");
 
 exports.handler = async (event) => {
   console.log("event:", event);
@@ -94,18 +92,14 @@ exports.handler = async (event) => {
   // Initial product setup
   let product = await handlers.basicProperties(shopifyObj);
 
+  // Upload product to Hanabom
+  const uploadRes = await uploadHanabom(product);
+
   // Store on db
-  const hanaID = "19175";
-  const shopifyID = "70354430199655";
+  const hanaID = uploadRes.id;
+  const shopifyID = shopifyObj.id;
   const prodName = product.name;
-  const sql =
-    'INSERT INTO products (hanaId, wixId, name) VALUES ("' +
-    hanaID +
-    '", "' +
-    shopifyID +
-    '", "' +
-    prodName +
-    '");';
+  const sql = helpers.sql(hanaID, shopifyID, prodName);
   console.log("sql:", sql);
 
   dbAction(sql, (results) => {
