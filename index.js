@@ -22,6 +22,17 @@ exports.handler = async (event) => {
 
   console.log("product:", product);
 
+  // Store on db
+  const sql = `SELECT * FROM products;`;
+
+  dbAction(sql, (results) => {
+    console.log("inside db action");
+    return results;
+  });
+  dbEnd();
+
+  /*
+
   // Find from db
   const shopifyID = shopifyObj.id;
   const sql = `SELECT * FROM products WHERE wixId = "${shopifyID}";`;
@@ -45,6 +56,7 @@ exports.handler = async (event) => {
     return sqlData;
   });
   dbEnd();
+  */
 
   // Response
   const response = {
